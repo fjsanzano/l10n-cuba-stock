@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!--    STOCK -->
+        <record id="group_stock_supply_request" model="res.groups">
+            <field name="name">Supply requester</field>
+            <field name="category_id" ref="base.module_category_inventory_inventory"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="stock.group_stock_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('l10n_cu_stock_supply_request.group_stock_supply_request'))]"/>
+        </record>
+
+        <!-- agregando el grupo nuevo al menu-->
+        <record id="stock.menu_stock_root" model="ir.ui.menu">
+			<field eval="[(6, 0, [ref('l10n_cu_stock_supply_request.group_stock_supply_request')])]" name="groups_id"/>
+		</record>
+
+        <!-- agregando el grupo al menu overview-->
+        <record id="stock.stock_picking_type_menu" model="ir.ui.menu">
+			<field eval="[(6, 0, [ref('stock.group_stock_user')])]" name="groups_id"/>
+		</record>
+         <!-- agregando el grupo al menu overview-->
+        <record id="stock.menu_action_inventory_tree" model="ir.ui.menu">
+			<field eval="[(6, 0, [ref('stock.group_stock_user')])]" name="groups_id"/>
+		</record>
+         <!-- agregando el grupo group_erp_manager al menu Apps -->
+        <record id="base.menu_apps" model="ir.ui.menu">
+			<field eval="[(6, 0, [ref('base.group_erp_manager')])]" name="groups_id"/>
+		</record>
+<!-- groups="base.group_erp_manager"
+ <menuitem id="menu_apps" name="Apps" parent="menu_management" sequence="5"/>-->
+
+	</data>
+    <data noupdate="1">
+        <record id="group_stock_supply_request_rule" model="ir.rule">
+            <field name="name">Personal Supply Requests Rule</field>
+            <field name="model_id" ref="model_stock_picking_supply_request"/>
+            <field name="groups" eval="[(4, ref('l10n_cu_stock_supply_request.group_stock_supply_request'))]"/>
+            <field name="domain_force">['|',('partner_id','=',user.partner_id.id),('partner_id','=',False)]</field>
+        </record>
+
+        <record id="group_stock_supply_request_rule_reset" model="ir.rule">
+            <field name="name">Personal Supply Requests Rule Reset</field>
+            <field name="model_id" ref="model_stock_picking_supply_request"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('stock.group_stock_user'))]"/>
+        </record>
+
+    </data>
+</openerp>
